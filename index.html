@@ -335,7 +335,7 @@
   const jar = new CodeJar(editor, highlight)
 
   const example1 = new CodeJar(document.querySelector('#example-1 .code'), highlight, {tab: '  '})
-  example1.updateCode(`import {CodeJar} from 'codejar';
+  example1.updateCode(`import {CodeJar} from '@medv/codejar';
 
 const node = document.querySelector('.editor');
 
@@ -372,7 +372,7 @@ const jar = new CodeJar(node, my);
 
 
   const example2 = new CodeJar(document.querySelector('#example-2 .code'), highlight, {tab: '  '})
-  example2.updateCode(`import {CodeJar} from 'codejar';
+  example2.updateCode(`import {CodeJar} from '@medv/codejar';
 
 const node = document.querySelector('.editor');
 
@@ -452,7 +452,7 @@ const jar = new CodeJar(node, my);`)
   const languages = [
     function () {
       editor.className = 'editor language-js'
-      jar.updateCode(`import {CodeJar} from 'codejar';
+      jar.updateCode(`import {CodeJar} from '@medv/codejar';
 import Prism from 'prismjs';
 
 const editor = document.querySelector('#editor');
