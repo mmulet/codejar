@@ -1,5 +1,6 @@
 export class CodeJar {
     constructor(editor, highlight, options = {}) {
+        this.listeners = [];
         this.history = [];
         this.historyPointer = -1;
         this.focus = false;
@@ -41,7 +42,11 @@ export class CodeJar {
             this.highlight(this.editor);
             this.restore(pos);
         }, 30);
-        this.editor.addEventListener('keydown', event => {
+        const on = (type, fn) => {
+            this.listeners.push([type, fn]);
+            this.editor.addEventListener(type, fn);
+        };
+        on('keydown', event => {
             if (event.key === 'Enter') {
                 this.handleNewLine(event);
             }
@@ -56,25 +61,29 @@ export class CodeJar {
                 this.handleUndoRedo(event);
             }
         });
-        this.editor.addEventListener('keyup', event => {
+        on('keyup', event => {
             debounceHighlight();
             this.recordHistory();
+            if (this.callback)
+                this.callback(this.toString());
         });
-        this.editor.addEventListener('focus', event => {
+        on('focus', event => {
             this.focus = true;
             this.recordHistory();
         });
-        this.editor.addEventListener('blur', event => {
+        on('blur', event => {
             this.focus = false;
         });
-        this.editor.addEventListener('paste', event => {
+        on('paste', event => {
             this.handlePaste(event);
-        });
-        this.editor.addEventListener('input', event => {
-            if (this.callback) {
+            if (this.callback)
                 this.callback(this.toString());
-            }
         });
+    }
+    destroy() {
+        for (let [type, fn] of this.listeners) {
+            this.editor.removeEventListener(type, fn);
+        }
     }
     save() {
         const s = window.getSelection();
